@@ -5,9 +5,10 @@ DATATYPES = {'integer' : 'INT',
              'varchar' : 'VARCHAR',
              'char'    : 'CHAR'}
 
-KEYS = {'primary_key' : 'PRIMARY KEY',
-        'foreign_key' : 'FOREIGN KEY'}
+KEYS = {'primary_key'  : 'PRIMARY KEY',
+        'foreign_key'  : 'FOREIGN KEY'}
 
-OBJECTS = {'database' : 'DATABASE',
-           'table' : 'TABLE',
-           'index' : 'INDEX'}
+OBJECTS = {'database'  : 'DATABASE',
+           'table'     : 'TABLE',
+           'index'     : 'INDEX'}
+
