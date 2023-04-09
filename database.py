@@ -1,8 +1,10 @@
 from config import *
 from exceptions import *
 import re
-'''create_table_re = re.findall(r'CREATE TABLE \w+\((\w+ \w+(?:, )?)+\)')''' # for the future
+import os
 import sqlite3
+'''create_table_re = re.findall(r'CREATE TABLE \w+\((\w+ \w+(?:, )?)+\)')''' # for the future
+
 
 class Database:
     def __init__(self, database_name):
@@ -10,28 +12,47 @@ class Database:
 
     def create_database(self): # This function create and open new database
         db_connect = sqlite3.connect(self.database + '.db')
+
         return db_connect
     
     def execute_query(self, query = None): # This function executes the queries that will be entered
         connect = self.create_database()
         cur = connect.cursor()
-        cur.execute(query)
-        connect.commit() # Commit needs to save result of the query
-        connect.close()
+        try:
+            cur.execute(query)
+            if 'SELECT' in query:
+                return cur.fetchall()
+            connect.commit() # Commit needs to save result of the query
+            connect.close()            
+        except sqlite3.OperationalError:
+            raise QueryError
 
-    def select_object(self, table_name, column_list = '*'): # This function select objects from table
+    def select_object(self, table_name, 
+                      condition = '', column_list = '*'): # This function select objects from table
         connect = self.create_database()
         cur = connect.cursor()
-        query_result = cur.execute(f'SELECT {column_list} FROM {table_name}')
-        return query_result
+        try:
+            if len(condition) == 0:
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}')
+            else:
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}')
+            return query_result
+        except sqlite3.OperationalError:
+            raise TableNotFoundError
+    def drop_database(self):
+        self.execute_query(f"DROP DATABASE {self.database}")
+    
+    def drop_object(self, object_type, object_name):
+        self.execute_query(f"DROP {object_type.upper()} {object_name}")
 
 # below experiments
 db = Database('random_shit')
-'''
+
 db.create_database()
-db.execute_query("CREATE TABLE test(i integer, age int)")
-db.execute_query("INSERT INTO test(i, age) VALUES (1, 25), (2, 298), (3, 90243), (4, 112), (5, 895)")'''
-for elem in db.select_object('test', '*').fetchone():
+db.execute_query("CREATE TABLE test(i integer, name varchar(20))")
+#db.drop_object('table', 'test')
+db.execute_query("INSERT INTO test(i, name) VALUES (1, 'dima'), (2, 'jawdji'), (3, 'hoe'), (4, 'oihfaew'), (5, 'you')")
+for elem in db.select_object('test', 'i = 3'):
     print(elem)
 # TODO
 """
