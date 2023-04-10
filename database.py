@@ -29,8 +29,6 @@ class Database:
 
     def select_object(self, table_name, 
                       condition = '', column_list = '*'): # This function select objects from table
-        connect = self.create_database()
-        cur = connect.cursor()
         try:
             if len(condition) == 0:
                 query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}')
