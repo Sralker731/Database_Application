@@ -15,18 +15,36 @@ class Database:
 
         return db_connect
     
-    def execute_query(self, query = None): # This function executes the queries that will be entered
+    def execute_query(self, query = None, save = None): # This function executes the queries that will be entered
         connect = self.create_database()
         cur = connect.cursor()
+
         try:
-            cur.execute(query)
+            cur.execute(f'''{query}''')
             if 'SELECT' in query:
                 return cur.fetchall()
-            connect.commit() # Commit needs to save result of the query
-            connect.close()            
+            
+            if save == True:
+                return query
+            connect.commit() # Commit needs to save result of the query    
+        
         except sqlite3.OperationalError:
             raise QueryError
+    
+    def execute_queries(self, query): # This function execute some queries
+        for queries in query:
+            self.execute_query(queries)
 
+    def save_txt_queries(self, query): # дописать миграцыю, типа функ. которая принимает 2 бд-шки и 
+                                   #выполняет запрос из txt файлика
+        result = self.execute_queries(query)
+        with open('Queries.txt', 'w') as file:
+            file.write(str(result))
+            file.close()
+    
+    def migration_function(self, migrationDB, query):
+        
+            
     def select_object(self, table_name, 
                       condition = '', column_list = '*'): # This function select objects from table
         connect = self.create_database()
@@ -39,6 +57,7 @@ class Database:
             return query_result
         except sqlite3.OperationalError:
             raise TableNotFoundError
+
     def drop_database(self):
         self.execute_query(f"DROP DATABASE {self.database}")
     
@@ -54,15 +73,3 @@ db.execute_query("CREATE TABLE test(i integer, name varchar(20))")
 db.execute_query("INSERT INTO test(i, name) VALUES (1, 'dima'), (2, 'jawdji'), (3, 'hoe'), (4, 'oihfaew'), (5, 'you')")
 for elem in db.select_object('test', 'i = 3'):
     print(elem)
-# TODO
-"""
-1. Залить первую НЕДОверсию в гитхаб +
-2. Поэкспериментировать с запросами в базу данных +
-3. Решить баг, который создает базу вне рамок репозитория ---
-4. Создать функции (выбрать 1 объект, много и все) = fetchmany([count])
-5. Создать файл exceptions.py и прописать ошибки: +
-    Query Error
-    Database\Table\Index not found error 
-6. Составить документацию по продукту +
-7. Залить отдельной веткой (db)
-"""
