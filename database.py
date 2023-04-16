@@ -40,13 +40,13 @@ class Database:
         for queries in query:
             self.execute_query(queries, True)
 
-    def save_txt_queries(self, query): 
+    def save_txt_queries(self, query): # This function save queries in text file
         result = self.execute_queries(query)
         with open('Queries.txt', 'w') as file:
             file.write(str(result))
             file.close()
     
-    def migration_function(self, migrationDB):
+    def migration_function(self, migrationDB): # This function needs to 'copy' database queries
         self.connect_database(migrationDB)
         with open('Queries.txt', 'r') as file:
             result = file.read()
@@ -66,18 +66,8 @@ class Database:
         except sqlite3.OperationalError:
             raise TableNotFoundError
 
-    def drop_database(self):
+    def drop_database(self): # This function drop database
         self.execute_query(f"DROP DATABASE {self.database}")
     
-    def drop_object(self, object_type, object_name):
+    def drop_object(self, object_type, object_name): # This function drop object in databse
         self.execute_query(f"DROP {object_type.upper()} {object_name}")
-
-# below experiments
-db = Database('random_shit')
-
-db.create_database()
-db.execute_query("CREATE TABLE test(i integer, name varchar(20))")
-#db.drop_object('table', 'test')
-db.execute_query("INSERT INTO test(i, name) VALUES (1, 'dima'), (2, 'jawdji'), (3, 'hoe'), (4, 'oihfaew'), (5, 'you')")
-for elem in db.select_object('test', 'i = 3'):
-    print(elem)
