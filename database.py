@@ -15,6 +15,10 @@ class Database:
 
         return db_connect
     
+    def connect_database(self, database):
+        db_con = sqlite3.connect(database + '.db')
+        return db_con
+    
     def execute_query(self, query = None, save = None): # This function executes the queries that will be entered
         connect = self.create_database()
         cur = connect.cursor()
@@ -26,6 +30,7 @@ class Database:
             
             if save == True:
                 return query
+            
             connect.commit() # Commit needs to save result of the query    
         
         except sqlite3.OperationalError:
@@ -33,18 +38,21 @@ class Database:
     
     def execute_queries(self, query): # This function execute some queries
         for queries in query:
-            self.execute_query(queries)
+            self.execute_query(queries, True)
 
-    def save_txt_queries(self, query): # дописать миграцыю, типа функ. которая принимает 2 бд-шки и 
-                                   #выполняет запрос из txt файлика
+    def save_txt_queries(self, query): 
         result = self.execute_queries(query)
         with open('Queries.txt', 'w') as file:
             file.write(str(result))
             file.close()
     
-    def migration_function(self, migrationDB, query):
-        pass
-            
+    def migration_function(self, migrationDB):
+        self.connect_database(migrationDB)
+        with open('Queries.txt', 'r') as file:
+            result = file.read()
+            self.execute_queries(result)
+            file.close()
+
     def select_object(self, table_name, 
                       condition = '', column_list = '*'): # This function select objects from table
         connect = self.create_database()
