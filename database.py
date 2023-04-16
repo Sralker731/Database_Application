@@ -43,7 +43,7 @@ class Database:
             file.close()
     
     def migration_function(self, migrationDB, query):
-        
+        pass
             
     def select_object(self, table_name, 
                       condition = '', column_list = '*'): # This function select objects from table
