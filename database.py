@@ -10,14 +10,10 @@ class Database:
     def __init__(self, database_name):
         self.database = database_name
 
-    def create_database(self): # This function create and open new database
-        db_connect = sqlite3.connect(self.database + '.db')
+    def create_database(self, db_name): # This function create and open new database
+        db_connect = sqlite3.connect(db_name + '.db')
 
         return db_connect
-    
-    def connect_database(self, database):
-        db_con = sqlite3.connect(database + '.db')
-        return db_con
     
     def execute_query(self, query = None, save = None): # This function executes the queries that will be entered
         connect = self.create_database()
@@ -36,7 +32,7 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, query): # This function execute some queries
+    def execute_queries(self, query): # This function execute some queries or saves them
         for queries in query:
             self.execute_query(queries, True)
 
@@ -46,15 +42,14 @@ class Database:
             file.write(str(result))
             file.close()
     
-    def migration_function(self, migrationDB): # This function needs to 'copy' database queries
-        self.connect_database(migrationDB)
+    def migration_function(self): # This function needs to 'copy' database queries
         with open('Queries.txt', 'r') as file:
             result = file.read()
             self.execute_queries(result)
             file.close()
 
-    def select_object(self, table_name, 
-                      condition = '', column_list = '*'): # This function select objects from table
+    def select_object(self, table_name, column_list = '*',
+                      condition = '',): # This function select objects from table
         connect = self.create_database()
         cur = connect.cursor()
         try:
@@ -66,8 +61,8 @@ class Database:
         except sqlite3.OperationalError:
             raise TableNotFoundError
 
-    def drop_database(self): # This function drop database
-        self.execute_query(f"DROP DATABASE {self.database}")
+    def drop_database(self, database): # This function drop database
+        self.execute_query(f"DROP DATABASE {database}")
     
     def drop_object(self, object_type, object_name): # This function drop object in databse
         self.execute_query(f"DROP {object_type.upper()} {object_name}")
