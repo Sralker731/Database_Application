@@ -21,10 +21,10 @@ class Database:
 
         try:
             cur.execute(f'''{query}''')
-            if 'SELECT' in query:
+            if 'SELECT' in query: # This "if" returns everything that matches the SELECT-query 
                 return cur.fetchall()
             
-            if save == True:
+            if save == True: # This "if" needs to save the query(-ies)
                 return query
             
             connect.commit() # Commit needs to save result of the query    
