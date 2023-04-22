@@ -33,3 +33,6 @@ RESIZABLE_WIDTH = False
 RESIZABLE_HEIGHT = False
 
 TITLE = 'Database Application V.1.0.0'
+
+# Regular expression values
+REGEX_QUERY = r'[A-Za-z0-9\w\s|*]+;'

@@ -1,18 +1,30 @@
 from database import Database
+from engine import *
 from config import *
 
 from tkinter import *
 
 import tkinter.messagebox as mb
+import re
 
 def send_query(): # This function sends query to the database
     message = mb.askyesno(title='Warning!',
                          message='Are you sure, that you want to send this query?')
     if message:
         database_name = file_name_field.get(0.0, END).strip()
-        query = query_field.get(0.0, END)
+        query = query_field.get(0.0, END).replace('\n', '')
+        query = re.findall(REGEX_QUERY, query)
         db = Database(database_name)
-        db.create_query(query)
+        if 'SELECT' in query:
+            query_result = db.select_object_raw(query)
+            file = open(f'{database_name}_output.txt', 'a+')
+            file.write(query_result)
+            mb.showinfo(title='Result',
+                        message=f'Data was saved as {database_name}_output.txt!')
+            file.close()
+        else:
+            db.create_query(query)
+            
         mb.showinfo(title='Result',
                     message='Query was executed!')
 

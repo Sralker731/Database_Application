@@ -13,10 +13,18 @@ class Database:
     def create_query(self, query = None):
         connect = self.create_database()
         cur = connect.cursor()
-        cur.execute(query)
+        return cur.execute(query)
 
     def select_object(self, object_name, column_list = '*'):
         connect = self.create_database()
         cur = connect.cursor()
         query_result = cur.execute(f'SELECT {column_list} from {object_name}')
+        return query_result
+    
+    def select_object_raw(self, query):
+        connect = self.create_database()
+        cur = connect.cursor()
+        query_result = ''
+        for value in query:
+           query_result += self.create_query(query)
         return query_result
