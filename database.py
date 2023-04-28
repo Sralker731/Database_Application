@@ -19,8 +19,8 @@ class Database:
         return db_connect
 
     
-    def execute_query(self, query = None, save = None): # This function executes the queries that will be entered
-        connect = self.create_database()
+    def execute_query(self, con = None, query = None, save = None): # This function executes the queries that will be entered
+        connect = con
         cur = connect.cursor()
 
         try:
@@ -37,29 +37,31 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, queries, save = None): # This function execute some queries or saves them
+    def execute_queries(self, queries, connect = None, save = None): # This function execute some queries or saves them
         queries_list = str(queries).split(';\n')
         for query in queries_list:
             if save == True:
-                result = self.execute_query(query, True)
+                result = self.execute_query(connect, query, True)
                 return result
             self.execute_query(query)
 
 
 
     def save_txt_queries(self, query, old_db_name, new_db_name): # This function save queries in text file
-        result = self.execute_queries(str(query).replace(old_db_name, new_db_name), True)
         with open('Queries.txt', 'w') as file:
-            file.write(str(result))
+            file.write(str(self.execute_queries(str(query).replace(old_db_name, new_db_name), True)))
             file.close()
     
-    def migration_function(self, new_db_name): # This function needs to 'copy' database queries
-        self.create_database(new_db_name)
+    def read_txt_file(self): # This function reads Queries.txt
         with open('Queries.txt', 'r') as file:
-            result = file.read().replace(self.database, new_db_name)
-            self.execute_queries(result)
+            result = file.read()
             file.close()
-
+        return result
+    
+    def migration_function(self, new_db_name): # This function needs to 'copy' database queries
+        con = self.create_database(new_db_name)
+        result = self.read_txt_file()
+        self.execute_queries(result, con)
 
 
 
