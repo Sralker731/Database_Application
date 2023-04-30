@@ -98,6 +98,3 @@ class Database:
             return query_result
         except sqlite3.OperationalError:
             raise TableNotFoundError
-
-db = Database('test')
-db.migration_function('test2')
