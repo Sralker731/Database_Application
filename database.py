@@ -9,14 +9,18 @@ import sqlite3
 class Database:
     def __init__(self, db_name):
         self.database = db_name
-        self.connect = self.create_database()
+        self.connect = self.create_database(db_name)
 
 
 
     def create_database(self, db_name = None): # This function create and open new database
-        if db_name == None:
+        db_way = '\\Database_Application\\'
+        if db_name is None:
             db_name = self.database
-        db_connect = sqlite3.connect(db_name + '.db')
+        try:
+            db_connect = sqlite3.connect(str(db_name) + '.db')
+        except sqlite3.OperationalError:
+            raise YouAreDebilError
 
         return db_connect
 
@@ -53,9 +57,16 @@ class Database:
                     file.write(query)
                 file.close()
         else:
-            cursor.executescript(queries)
-            connect.commit()
-            cursor.close()
+            try:
+                cursor.executescript(queries)
+                connect.commit()
+
+            except Exception as e:
+                connect.rollback()
+                raise e
+
+            finally:
+                connect.close()
 
 
 
@@ -88,19 +99,5 @@ class Database:
         except sqlite3.OperationalError:
             raise TableNotFoundError
 
-
-
-
-    def drop_database(self, database): # This function drop database
-        self.execute_query(f"DROP DATABASE {database}")
-    
-    def drop_object(self, object_type, object_name): # This function drop object in databse
-        self.execute_query(f"DROP {object_type.upper()} {object_name}")
-
 db = Database('test')
 db.migration_function('test2')
-'''
-TODO
-ДОДЕЛАЙ МИГРАЦИю
-РАЗБЕРИСЬ В ИМЕНАХ ПЕРЕМЕННих
-'''
