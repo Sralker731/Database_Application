@@ -11,6 +11,8 @@ class Database:
         self.database = db_name
         self.connect = self.create_database()
 
+
+
     def create_database(self, db_name = None): # This function create and open new database
         if db_name == None:
             db_name = self.database
@@ -18,9 +20,13 @@ class Database:
 
         return db_connect
 
-    
-    def execute_query(self, con = None, query = None, save = None): # This function executes the queries that will be entered
-        connect = con
+
+
+    def execute_query(self, dbname = None, query = None, save = None): # This function executes the queries that will be entered
+        if dbname == None:
+            connect = self.create_database(dbname)
+        else:
+            connect = self.create_database(self.database)
         cur = connect.cursor()
 
         try:
@@ -37,17 +43,24 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, queries, connect = None, save = None): # This function execute some queries or saves them
-        queries_list = str(queries).split(';\n')
-        for query in queries_list:
-            if save == True:
-                result = self.execute_query(connect, query, True)
-                return result
-            self.execute_query(query)
+    def execute_queries(self, dbname, queries, save = None): # This function execute some queries or saves them
+        connect = self.create_database(dbname)
+        cursor = connect.cursor()
+
+        if bool(save) == True:
+            with open('Queries.txt', 'w') as file:
+                for query in queries:
+                    file.write(query)
+                file.close()
+        else:
+            cursor.executescript(queries)
+            connect.commit()
+            cursor.close()
 
 
 
-    def save_txt_queries(self, query, old_db_name, new_db_name): # This function save queries in text file
+    def save_txt_queries(self, query, old_db_name, new_db_name): # This function save queries in text file.
+                                                                 #(For migration)
         with open('Queries.txt', 'w') as file:
             file.write(str(self.execute_queries(str(query).replace(old_db_name, new_db_name), True)))
             file.close()
@@ -59,9 +72,8 @@ class Database:
         return result
     
     def migration_function(self, new_db_name): # This function needs to 'copy' database queries
-        con = self.create_database(new_db_name)
-        result = self.read_txt_file()
-        self.execute_queries(result, con)
+        queries = self.read_txt_file()
+        self.execute_queries(self, new_db_name, queries)
 
 
 
