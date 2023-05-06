@@ -11,36 +11,28 @@ class Database:
         self.database = db_name
         self.connect = self.create_database(db_name)
 
-
-
+    def create_database(self, db_name): # This function create and open new database
+        try:
+            dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
+        except: # If name of db doesn't entered, the name of db = self.database
+            db_name = str(self.database) + '.db'
+            dbcon = sqlite3.connect(db_name)
+        return dbcon
+    '''
     def create_database(self, db_name = None): # This function create and open new database
-        db_way = '\\Database_Application\\'
         if db_name is None:
             db_name = self.database
-        try:
-            db_connect = sqlite3.connect(str(db_name) + '.db')
-        except sqlite3.OperationalError:
-            raise YouAreDebilError
+        db_connect = sqlite3.connect(str(db_name) + '.db')
 
         return db_connect
-
+    '''
 
 
     def execute_query(self, dbname = None, query = None, save = None): # This function executes the queries that will be entered
-        if dbname == None:
-            connect = self.create_database(dbname)
-        else:
-            connect = self.create_database(self.database)
+        connect = self.create_database(dbname)
         cur = connect.cursor()
 
         try:
-            first_query_word = str(query).split()[0].upper()
-            if first_query_word == 'SELECT': # This "if" returns everything that matches the SELECT-query 
-                return cur.execute(query).fetchall()
-            
-            if save == True: # This "if" needs to save the query
-                return query
-            
             cur.execute(query)
             connect.commit() # Commit needs to save result of the query    
         
@@ -48,40 +40,46 @@ class Database:
             raise QueryError
     
     def execute_queries(self, dbname, queries, save = None): # This function execute some queries or saves them
-        connect = self.create_database(dbname)
-        cursor = connect.cursor()
+        with self.create_database(dbname) as conn:
+            cursor = conn.cursor()
 
-        if bool(save) == True:
-            with open('Queries.txt', 'w') as file:
-                for query in queries:
-                    file.write(query)
-                file.close()
-        else:
             try:
                 cursor.executescript(queries)
-                connect.commit()
+                conn.commit()
 
             except Exception as e:
-                connect.rollback()
+                conn.rollback()
                 raise e
 
             finally:
-                connect.close()
+                conn.close()
 
 
 
-    def save_txt_queries(self, query, old_db_name, new_db_name): # This function save queries in text file.
-                                                                 #(For migration)
-        with open('Queries.txt', 'w') as file:
-            file.write(str(self.execute_queries(str(query).replace(old_db_name, new_db_name), True)))
+    def save_query(self, query):
+        with open('Saved queries.txt', 'a') as file:
+            file.write(f'\nNext query(-ies)\n{query}')
             file.close()
     
+    def save_queries(queries):
+        query_list = queries.split(';')
+        query_list = [query.strip() for query in query_list if len(query.strip()) > 0]
+        # Create list of not empty queries
+        
+        queries = '\n'.join(query_list) # Add to every query of the list indent
+        
+        with open('Saved queries.txt', 'a') as file:
+            file.write(f'\nNext query(-ies)\n{queries}')
+            file.close()
+
     def read_txt_file(self): # This function reads Queries.txt
         with open('Queries.txt', 'r') as file:
             result = file.read()
             file.close()
         return result
-    
+
+
+
     def migration_function(self, new_db_name): # This function needs to 'copy' database queries
         queries = self.read_txt_file()
         self.execute_queries(self, new_db_name, queries)
