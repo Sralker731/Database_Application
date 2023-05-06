@@ -18,17 +18,11 @@ class Database:
             db_name = str(self.database) + '.db'
             dbcon = sqlite3.connect(db_name)
         return dbcon
-    '''
-    def create_database(self, db_name = None): # This function create and open new database
-        if db_name is None:
-            db_name = self.database
-        db_connect = sqlite3.connect(str(db_name) + '.db')
-
-        return db_connect
-    '''
 
 
-    def execute_query(self, dbname = None, query = None, save = None): # This function executes the queries that will be entered
+
+    def execute_query(self, dbname = None,
+                      query = None, save = None): # This function executes the queries that will be entered
         connect = self.create_database(dbname)
         cur = connect.cursor()
 
@@ -56,12 +50,12 @@ class Database:
 
 
 
-    def save_query(self, query):
+    def save_query(self, query): # This function saves one query
         with open('Saved queries.txt', 'a') as file:
             file.write(f'\nNext query(-ies)\n{query}')
             file.close()
     
-    def save_queries(queries):
+    def save_queries(queries): # This function saves some queries
         query_list = queries.split(';')
         query_list = [query.strip() for query in query_list if len(query.strip()) > 0]
         # Create list of not empty queries
