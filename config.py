@@ -43,6 +43,9 @@ TITLE = 'Database Application V.1.0.0'
 REGEX_QUERY = r'[A-Za-z0-9\w\s|*]+;'
 TABLE_NAME_QUERY=r'TABLE|table|Table [A-Za-z0-9]+'
 
-# Other values
+# Browser values
 BROWSERS = ['chrome', 'firefox', 'opera', 'safari']
 HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki' 
+
+# File path
+PATH = ''

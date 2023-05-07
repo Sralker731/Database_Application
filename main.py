@@ -139,6 +139,44 @@ def open_simple_window():
     for widget in widgets:
         widget.pack()
 
+def open_migration_window():
+    def migrate():
+        ask = mb.askyesno(title='Question',
+                          message='Are you sure, that you want to migrate data?')
+        if ask:
+            new_db_name = target_field.get(0.0, END)
+            file_name = file_name_field.get(0.0, END)
+            new_db = Database(new_db_name)
+
+    mig_win = Toplevel()
+    mig_win.title('Migration')
+    mig_win.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
+    mig_win.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT // 2}')
+    target_label = Label(mig_win,
+                         width=LABEL_WIDTH,
+                         height=LABEL_HEIGHT,
+                         text='Enter your new database name below:')
+    target_field = Text(mig_win,
+                        width=ENTRY_WIDTH,
+                        height=ENTRY_HEIGHT)
+    file_name_label = Label(mig_win,
+                         width=LABEL_WIDTH,
+                         height=LABEL_HEIGHT,
+                         text='Enter your file name field:')
+    file_name_field = Text(mig_win,
+                           width=ENTRY_WIDTH,
+                           height=ENTRY_HEIGHT)
+    start_button = Button(mig_win,
+                          width=BUTTON_WIDTH,
+                          height=BUTTON_HEIGHT,
+                          text='Migrate',
+                          command=migrate)
+    widgets = [source_label, source_field,
+               target_label, target_field,
+               file_name_label, file_name_field,
+               start_button]
+    for widget in widgets:
+        widget.pack()
 
 main_label = Label(width=LABEL_WIDTH,
                    height=LABEL_HEIGHT,
@@ -165,7 +203,8 @@ empty_label3 = Label(width=LABEL_WIDTH,
 
 migration_button = Button(width=BUTTON_WIDTH,
                           height=BUTTON_HEIGHT,
-                          text = 'Migration')
+                          text = 'Migration',
+                          command=open_migration_window)
 empty_label4 = Label(width=LABEL_WIDTH,
                      height=LABEL_HEIGHT)
 
