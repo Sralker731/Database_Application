@@ -171,8 +171,7 @@ def open_migration_window():
                           height=BUTTON_HEIGHT,
                           text='Migrate',
                           command=migrate)
-    widgets = [source_label, source_field,
-               target_label, target_field,
+    widgets = [target_label, target_field,
                file_name_label, file_name_field,
                start_button]
     for widget in widgets:
