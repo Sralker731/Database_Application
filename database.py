@@ -1,5 +1,6 @@
 from config import *
 from exceptions import *
+
 import re
 import os
 import sqlite3
@@ -11,7 +12,14 @@ class Database:
         self.database = db_name
         self.connect = self.create_database(db_name)
 
-    def create_database(self, db_name): # This function create and open new database
+    def create_new_database(self, dbname):
+        try:
+            sqlite3.connect(str(dbname)+'.db') # Database connect
+        except: # If name of db doesn't entered, the name of db = self.database
+            dbname = str(self.database) + '.db'
+            sqlite3.connect(dbname)
+
+    def create_database(self, db_name): # This function create new database and return connection to it
         try:
             dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
         except: # If name of db doesn't entered, the name of db = self.database
@@ -22,7 +30,7 @@ class Database:
 
 
     def execute_query(self, dbname = None,
-                      query = None, save = None): # This function executes the queries that will be entered
+                      query = None): # This function executes the queries that will be entered
         connect = self.create_database(dbname)
         cur = connect.cursor()
 
@@ -33,50 +41,34 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, dbname, queries, save = None): # This function execute some queries or saves them
-        with self.create_database(dbname) as conn:
-            cursor = conn.cursor()
+    def execute_queries(self, dbname, queries): # This function execute some queries or saves them
+        conn = self.create_database(dbname)
+        cursor = conn.cursor()
 
-            try:
-                cursor.executescript(queries)
-                conn.commit()
+        try:
+            cursor.executescript(queries)
+            conn.commit()
 
-            except Exception as e:
-                conn.rollback()
-                raise e
-
-            finally:
-                conn.close()
-
-
-
-    def save_query(self, query): # This function saves one query
-        with open('Saved queries.txt', 'a') as file:
-            file.write(f'\nNext query(-ies)\n{query}')
-            file.close()
-    
-    def save_queries(queries): # This function saves some queries
-        query_list = queries.split(';')
-        query_list = [query.strip() for query in query_list if len(query.strip()) > 0]
-        # Create list of not empty queries
+        except Exception as e:
+            conn.rollback()
+            raise e
         
-        queries = '\n'.join(query_list) # Add to every query of the list indent
-        
-        with open('Saved queries.txt', 'a') as file:
-            file.write(f'\nNext query(-ies)\n{queries}')
-            file.close()
+        conn.close()
 
-    def read_txt_file(self): # This function reads Queries.txt
-        with open('Queries.txt', 'r') as file:
+
+
+    def read_txt_file(self, file_name): # This function reads Queries.txt
+        with open(file_name+'.txt', 'r') as file:
             result = file.read()
             file.close()
         return result
 
 
 
-    def migration_function(self, new_db_name): # This function needs to 'copy' database queries
-        queries = self.read_txt_file()
-        self.execute_queries(self, new_db_name, queries)
+    def migration_function(self, dbname, old_obj_name, new_obj_name): # This function needs to 'copy' database queries
+        self.create_new_database(dbname)
+        queries = self.read_txt_file('Queries').replace(old_obj_name, new_obj_name) # tl - Table
+        self.execute_queries(new_obj_name, queries)
 
 
 
