@@ -1,0 +1,3 @@
+create table tb01
+(id INTEGER,
+ name VARCHAR(50));

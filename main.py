@@ -143,23 +143,27 @@ def open_migration_window():
     def migrate():
         ask = mb.askyesno(title='Question',
                           message='Are you sure, that you want to migrate data?')
-        try:
-            if ask:
-                new_db_name = target_field.get(0.0, END)
-                file_name = file_name_field.get(0.0, END)
-                new_db = Database(new_db_name)
-                query = new_db.read_txt_file(file_name)
-                new_db.migration_function(new_db_name, query)
-            mb.showinfo(title='Status',
-                        message=f'Data was saved to the {new_db_name}.db database!')
-        except:
-            mb.showerror(title='Error',
-                         message='An error was occured, during the migration process.')
+        #try:
+        if ask:
+            new_db_name = target_field.get(0.0, END).strip()
+            file_name = file_name_field.get(0.0, END).strip()
+            new_db = Database(new_db_name)
+            #query = read_txt_file(file_name)
+            query = '''create table tb01
+                       (id INTEGER,
+                        name VARCHAR(50));'''
+            new_db.migration_function(new_db_name, query)
+        mb.showinfo(title='Status',
+                    message=f'Data was saved to the {new_db_name}.db database!')
+        #except:
+        #    mb.showerror(title='Error',
+        #                 message='An error was occured, during the migration process.')
 
     mig_win = Toplevel()
     mig_win.title('Migration')
     mig_win.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
     mig_win.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT // 2}')
+    
     target_label = Label(mig_win,
                          width=LABEL_WIDTH,
                          height=LABEL_HEIGHT,
@@ -170,7 +174,7 @@ def open_migration_window():
     file_name_label = Label(mig_win,
                          width=LABEL_WIDTH,
                          height=LABEL_HEIGHT,
-                         text='Enter your file name field:')
+                         text='Enter your file name:')
     file_name_field = Text(mig_win,
                            width=ENTRY_WIDTH,
                            height=ENTRY_HEIGHT)
