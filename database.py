@@ -24,8 +24,9 @@ class Database:
 
 
     def execute_query(self, dbname = None,
-                      query = None): # This function executes the queries that will be entered
-        connect = self.create_database(dbname)
+                      query = None, connection_status = False): 
+        # This function executes the queries that will be entered
+        connect = self.create_database(dbname, connection_status)
         cur = connect.cursor()
 
         try:
@@ -51,24 +52,18 @@ class Database:
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
-        self.create_new_database(dbname) # tl - Table
+        self.create_database(dbname)
         self.execute_queries(dbname, queries)
 
 
     def select_object(self, table_name, column_list = '*',
-                      condition = ''): # This function select objects from table
+                      condition = '', connect_status = False): # This function select objects from table
         try:
             if len(condition) == 0:
-                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}')
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}', connect_status)
             else:
-                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}')
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}',
+                                                  connect_status)
             return query_result
         except sqlite3.OperationalError:
-<<<<<<< HEAD
             raise TableNotFoundError
-
-db = Database('test')
-db.migration_function('test2','tl', 'tl2')
-=======
-            raise TableNotFoundError
->>>>>>> 4cd99247f4a64e5931ff0c9107ae050744c2f92d
