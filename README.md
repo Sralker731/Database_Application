@@ -22,6 +22,7 @@ project.
    2. Find Official - Windows
    3. Click Command Line
    4. Enter `pip install [library_name]`
+   Sreenshots are in Wiki in GitHub.
 # Other
 * User can get help by typing "@Kostantin_Rudenko" in the contact search field in Telegram.
 * Kostantin Rudenko support project and contribute to the project.
