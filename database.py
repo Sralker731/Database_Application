@@ -50,20 +50,9 @@ class Database:
         conn.close()
 
 
-
-    def read_txt_file(self, file_name): # This function reads Queries.txt
-        with open(file_name+'.txt', 'r') as file:
-            result = file.read()
-            file.close()
-        return result
-
-
-
-    def migration_function(self, dbname, old_obj_name, new_obj_name): # This function needs to 'copy' database queries
-        self.create_new_database(dbname)
-        queries = self.read_txt_file('Queries').replace(old_obj_name, new_obj_name) # tl - Table
-        self.execute_queries(new_obj_name, queries)
-
+    def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
+        self.create_new_database(dbname) # tl - Table
+        self.execute_queries(dbname, queries)
 
 
     def select_object(self, table_name, column_list = '*',
@@ -75,7 +64,11 @@ class Database:
                 query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}')
             return query_result
         except sqlite3.OperationalError:
+<<<<<<< HEAD
             raise TableNotFoundError
 
 db = Database('test')
 db.migration_function('test2','tl', 'tl2')
+=======
+            raise TableNotFoundError
+>>>>>>> 4cd99247f4a64e5931ff0c9107ae050744c2f92d

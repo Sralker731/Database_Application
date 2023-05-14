@@ -139,6 +139,55 @@ def open_simple_window():
     for widget in widgets:
         widget.pack()
 
+def open_migration_window():
+    def migrate():
+        ask = mb.askyesno(title='Question',
+                          message='Are you sure, that you want to migrate data?')
+        #try:
+        if ask:
+            new_db_name = target_field.get(0.0, END).strip()
+            file_name = file_name_field.get(0.0, END).strip()
+            new_db = Database(new_db_name)
+            #query = read_txt_file(file_name)
+            query = '''create table tb01
+                       (id INTEGER,
+                        name VARCHAR(50));'''
+            new_db.migration_function(new_db_name, query)
+        mb.showinfo(title='Status',
+                    message=f'Data was saved to the {new_db_name}.db database!')
+        #except:
+        #    mb.showerror(title='Error',
+        #                 message='An error was occured, during the migration process.')
+
+    mig_win = Toplevel()
+    mig_win.title('Migration')
+    mig_win.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
+    mig_win.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT // 2}')
+    
+    target_label = Label(mig_win,
+                         width=LABEL_WIDTH,
+                         height=LABEL_HEIGHT,
+                         text='Enter your new database name below:')
+    target_field = Text(mig_win,
+                        width=ENTRY_WIDTH,
+                        height=ENTRY_HEIGHT)
+    file_name_label = Label(mig_win,
+                         width=LABEL_WIDTH,
+                         height=LABEL_HEIGHT,
+                         text='Enter your file name:')
+    file_name_field = Text(mig_win,
+                           width=ENTRY_WIDTH,
+                           height=ENTRY_HEIGHT)
+    start_button = Button(mig_win,
+                          width=BUTTON_WIDTH,
+                          height=BUTTON_HEIGHT,
+                          text='Migrate',
+                          command=migrate)
+    widgets = [target_label, target_field,
+               file_name_label, file_name_field,
+               start_button]
+    for widget in widgets:
+        widget.pack()
 
 main_label = Label(width=LABEL_WIDTH,
                    height=LABEL_HEIGHT,
@@ -165,7 +214,8 @@ empty_label3 = Label(width=LABEL_WIDTH,
 
 migration_button = Button(width=BUTTON_WIDTH,
                           height=BUTTON_HEIGHT,
-                          text = 'Migration')
+                          text = 'Migration',
+                          command=open_migration_window)
 empty_label4 = Label(width=LABEL_WIDTH,
                      height=LABEL_HEIGHT)
 
