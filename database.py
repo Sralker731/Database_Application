@@ -10,28 +10,23 @@ import sqlite3
 class Database:
     def __init__(self, db_name):
         self.database = db_name
-        self.connect = self.create_database(db_name)
+        self.connect = sqlite3.connect(self.database)
 
-    def create_new_database(self, dbname):
-        try:
-            sqlite3.connect(str(dbname)+'.db') # Database connect
-        except: # If name of db doesn't entered, the name of db = self.database
-            dbname = str(self.database) + '.db'
-            sqlite3.connect(dbname)
-
-    def create_database(self, db_name): # This function create new database and return connection to it
+    def create_database(self, db_name, conn_return = False): # This function create new database and return connection to it
         try:
             dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
         except: # If name of db doesn't entered, the name of db = self.database
             db_name = str(self.database) + '.db'
-            dbcon = sqlite3.connect(db_name)
-        return dbcon
+            if conn_return == True:
+                dbcon = sqlite3.connect(db_name)
+                return dbcon
 
 
 
     def execute_query(self, dbname = None,
-                      query = None): # This function executes the queries that will be entered
-        connect = self.create_database(dbname)
+                      query = None, connection_status = False): 
+        # This function executes the queries that will be entered
+        connect = self.create_database(dbname, connection_status)
         cur = connect.cursor()
 
         try:
@@ -57,17 +52,18 @@ class Database:
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
-        self.create_new_database(dbname) # tl - Table
+        self.create_database(dbname)
         self.execute_queries(dbname, queries)
 
 
     def select_object(self, table_name, column_list = '*',
-                      condition = ''): # This function select objects from table
+                      condition = '', connect_status = False): # This function select objects from table
         try:
             if len(condition) == 0:
-                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}')
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}', connect_status)
             else:
-                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}')
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}',
+                                                  connect_status)
             return query_result
         except sqlite3.OperationalError:
             raise TableNotFoundError
