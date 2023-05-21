@@ -20,34 +20,15 @@ def open_query_window():
         if message:
             database_name = file_name_field.get(0.0, END).strip()
             query = query_field.get(0.0, END).replace('\n', '')
-            table_name = re.findall(TABLE_NAME_QUERY, query)
-            query = re.findall(REGEX_QUERY, query)
             db = Database(database_name)
-
-            for element in query:
-                if 'SELECT' in element:
-                    select_status = True
-                    break
-                else:
-                    select_status = False
-            if select_status:
-                table_name = table_name[0][len('TABLE '):]    
-                query_result = db.select_object(table_name, database_name)
-                file = open(f'{database_name}_output.txt', 'a+')
-                file.write(query_result)
-                mb.showinfo(title='Result',
-                            message=f'Data was saved as {database_name}_output.txt!')
-                file.close()
-            else:
-                db.execute_queries(query, database_name)
-                
+            db.execute_queries(query, database_name)   
             mb.showinfo(title='Result',
                         message='Query was executed!')
     alt_window = Toplevel()
     alt_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
     alt_window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
     file_name_label = Label(alt_window,
-                            text = 'Enter file name below:',
+                            text = 'Enter database name below:',
                             width = LABEL_WIDTH,
                             height = LABEL_HEIGHT)
 
@@ -143,21 +124,18 @@ def open_migration_window():
     def migrate():
         ask = mb.askyesno(title='Question',
                           message='Are you sure, that you want to migrate data?')
-        #try:
-        if ask:
-            new_db_name = target_field.get(0.0, END).strip()
-            file_name = file_name_field.get(0.0, END).strip()
-            new_db = Database(new_db_name)
-            #query = read_txt_file(file_name)
-            query = '''create table tb01
-                       (id INTEGER,
-                        name VARCHAR(50));'''
-            new_db.migration_function(new_db_name, query)
-        mb.showinfo(title='Status',
-                    message=f'Data was saved to the {new_db_name}.db database!')
-        #except:
-        #    mb.showerror(title='Error',
-        #                 message='An error was occured, during the migration process.')
+        try:
+            if ask:
+                new_db_name = target_field.get(0.0, END).strip()
+                file_name = file_name_field.get(0.0, END).strip()
+                new_db = Database(new_db_name)
+                query = read_txt_file(file_name)
+                new_db.migration_function(new_db_name, query)
+            mb.showinfo(title='Status',
+                        message=f'Data was saved to the {new_db_name}.db database!')
+        except:
+            mb.showerror(title='Error',
+                         message='An error was occured, during the migration process.')
 
     mig_win = Toplevel()
     mig_win.title('Migration')
