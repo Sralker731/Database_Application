@@ -10,18 +10,17 @@ import sqlite3
 class Database:
     def __init__(self, db_name):
         self.database = db_name
-        self.connect = sqlite3.connect(self.database)
+        self.connect = sqlite3.connect(self.database + '.db')
 
     def create_database(self, db_name, conn_return = False): # This function create new database and return connection to it
         try:
             dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
+            return dbcon
         except: # If name of db doesn't entered, the name of db = self.database
             db_name = str(self.database) + '.db'
-            if conn_return == True:
-                dbcon = sqlite3.connect(db_name)
-                return dbcon
-
-
+            dbcon = sqlite3.connect(db_name)
+            #if conn_return == True: # FixMe
+            return dbcon
 
     def execute_query(self, dbname = None,
                       query = None, connection_status = False): 
