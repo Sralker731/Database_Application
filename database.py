@@ -10,11 +10,13 @@ import sqlite3
 class Database:
     def __init__(self, db_name):
         self.database = db_name
-        self.connect = sqlite3.connect(self.database)
+        self.connect = sqlite3.connect(self.database+'.db')
 
-    def create_database(self, db_name, conn_return = False): # This function create new database and return connection to it
+    def create_database(self, db_name, conn_return = False):
+        # This function create new database and return connection to it
         try:
             dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
+            return dbcon
         except: # If name of db doesn't entered, the name of db = self.database
             db_name = str(self.database) + '.db'
             if conn_return == True:
@@ -26,29 +28,29 @@ class Database:
     def execute_query(self, dbname = None,
                       query = None, connection_status = False): 
         # This function executes the queries that will be entered
-        connect = self.create_database(dbname, connection_status)
-        cur = connect.cursor()
+        #connect = self.create_database(dbname, connection_status)
+        cur = self.connect.cursor()
 
         try:
             cur.execute(query)
-            connect.commit() # Commit needs to save result of the query    
+            self.connect.commit() # Commit needs to save result of the query    
         
         except sqlite3.OperationalError:
             raise QueryError
     
     def execute_queries(self, dbname, queries): # This function execute some queries or saves them
-        conn = self.create_database(dbname)
-        cursor = conn.cursor()
+        #conn = self.create_database(dbname)
+        cursor = self.connect.cursor()
 
-        try:
-            cursor.executescript(queries)
-            conn.commit()
-
+        #try:
+        cursor.executescript(queries)
+        self.connect.commit()
+        '''
         except Exception as e:
             conn.rollback()
             raise e
-        
-        conn.close()
+        '''
+        self.connect.close()
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
