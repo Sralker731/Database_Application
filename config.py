@@ -49,3 +49,6 @@ HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki'
 
 # File path
 PATH = ''
+
+# Error values
+ERROR_VALUES = '!@#$%^&*()/-+*:;~'

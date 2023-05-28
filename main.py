@@ -1,6 +1,7 @@
 from database import Database
 from engine import *
 from config import *
+from exceptions import *
 
 from tkinter import *
 
@@ -20,11 +21,20 @@ def open_query_window():
         if message:
             database_name = file_name_field.get(0.0, END).strip()
             query = query_field.get(0.0, END).strip()
-            db = Database(database_name)
-            db.execute_queries(database_name, query)   
-            mb.showinfo(
-                        title='Result',
-                        message='Query was executed!')
+            for error_value in ERROR_VALUES:
+                if error_value in database_name:
+                    mb.showerror(title = 'Error',
+                                 message = 'Database name consist incorrect values!')
+                    raise IncorrectDbNameError
+            if len(database_name) == 0 or len(query) == 0:
+                mb.showerror(title = 'Error',
+                             message = 'Fields cannot be empty!')
+            else:
+                db = Database(database_name)
+                db.execute_queries(database_name, query)   
+                mb.showinfo(
+                            title='Result',
+                            message='Query was executed!')
     alt_window = Toplevel()
     alt_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
     alt_window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
@@ -69,24 +79,32 @@ def open_simple_window():
             database_name = database_field.get(0.0, END).strip()
             table_names_list = tables_field.get(0.0, END).replace(' ', '').strip().split(',')
             indexes_names_list = indexes_field.get(0.0, END).replace(' ', '').strip().split(',')
-            database = Database(database_name)
-            index_status = True
-            if len(indexes_names_list) == 0 or '' in indexes_names_list:
-                index_status = False
-            ddl = ''
+            for error_value in ERROR_VALUES:
+                if error_value in database_name:
+                    mb.showerror(title = 'Error',
+                                 message = 'Database name consist incorrect values!')
+                    raise IncorrectDbNameError
+            if len(database_name) == 0 or len(table_names_list) == 0:
+                mb.showerror(title = 'Error',
+                             message = 'Fields cannot be empty!')
+            else:
+                database = Database(database_name)
+                index_status = True
+                if len(indexes_names_list) == 0 or '' in indexes_names_list:
+                    index_status = False
+                ddl = ''
 
-            for table_name in table_names_list:
-                ddl += f'CREATE TABLE {table_name} (ID INTEGER);\n'
+                for table_name in table_names_list:
+                    ddl += f'CREATE TABLE {table_name} (ID INTEGER);\n'
 
-            if index_status:
-                for index_name in indexes_names_list:
-                    ddl += f'CREATE INDEX {index_name} ON TABLE {table_name} (ID ASC);\n'
+                if index_status:
+                    for index_name in indexes_names_list:
+                        ddl += f'CREATE INDEX {index_name} ON TABLE {table_name} (ID ASC);\n'
 
-            database.execute_queries(database_name, ddl)
-                
-            mb.showinfo(simple_window,
-                        title='Result',
-                        message='Query was executed!')
+                database.execute_queries(database_name, ddl)
+                    
+                mb.showinfo(title='Result',
+                            message='Query was executed!')
     simple_window = Toplevel()
     simple_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
     simple_window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
@@ -134,11 +152,20 @@ def open_migration_window():
             if ask:
                 new_db_name = target_field.get(0.0, END).strip()
                 file_name = file_name_field.get(0.0, END).strip()
-                new_db = Database(new_db_name)
-                query = read_txt_file(file_name)
-                new_db.migration_function(new_db_name, query)
-            mb.showinfo(title='Status',
-                        message=f'Data was saved to the {new_db_name}.db database!')
+                for error_value in ERROR_VALUES:
+                    if error_value in new_db_name or error_value in file_name:
+                        mb.showerror(title = 'Error',
+                                    message = 'Database name or file name consist incorrect values!')
+                        raise IncorrectDbNameError
+                if len(new_db_name) == 0 or len(file_name) == 0:
+                    mb.showerror(title = 'Error',
+                                 message = 'Fields cannot be empty!')
+                else:
+                    new_db = Database(new_db_name)
+                    query = read_txt_file(file_name)
+                    new_db.migration_function(new_db_name, query)
+                    mb.showinfo(title='Status',
+                                message=f'Data was saved to the {new_db_name}.db database!')
         except:
             mb.showerror(title='Error',
                          message='An error was occured, during the migration process.')

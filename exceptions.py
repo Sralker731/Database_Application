@@ -16,5 +16,8 @@ class YouAreDebilError(Exception):
 
 class WrongFilePathError(Exception):
     pass
+
 # UI Errors
+class IncorrectDbNameError(Exception):
+    pass
 
