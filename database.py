@@ -19,11 +19,9 @@ class Database:
             return dbcon
         except: # If name of db doesn't entered, the name of db = self.database
             db_name = str(self.database) + '.db'
-            if conn_return == True:
-                dbcon = sqlite3.connect(db_name)
-                return dbcon
-
-
+            dbcon = sqlite3.connect(db_name)
+            #if conn_return == True: # FixMe
+            return dbcon
 
     def execute_query(self, dbname = None,
                       query = None, connection_status = False): 

@@ -19,10 +19,11 @@ def open_query_window():
                             message='Are you sure, that you want to send this query?')
         if message:
             database_name = file_name_field.get(0.0, END).strip()
-            query = query_field.get(0.0, END).replace('\n', '')
+            query = query_field.get(0.0, END).strip()
             db = Database(database_name)
-            db.execute_queries(query, database_name)   
-            mb.showinfo(title='Result',
+            db.execute_queries(database_name, query)   
+            mb.showinfo(
+                        title='Result',
                         message='Query was executed!')
     alt_window = Toplevel()
     alt_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
@@ -66,21 +67,25 @@ def open_simple_window():
                             message='Are you sure, that you want to send this query?')
         if message:
             database_name = database_field.get(0.0, END).strip()
-            table_names_list = tables_field.get(0.0, END).strip().split(',')
-            indexes_names_list = indexes_field.get(0.0, END).strip().split(',')
+            table_names_list = tables_field.get(0.0, END).replace(' ', '').strip().split(',')
+            indexes_names_list = indexes_field.get(0.0, END).replace(' ', '').strip().split(',')
             database = Database(database_name)
-
-            ddl = f'CREATE DATABASE {database_name};\n'
+            index_status = True
+            if len(indexes_names_list) == 0 or '' in indexes_names_list:
+                index_status = False
+            ddl = ''
 
             for table_name in table_names_list:
-                ddl += f'CREATE TABLE {table_name};'
-            
-            for index_name in indexes_names_list:
-                ddl += f'CREATE INDEX {index_name};'
+                ddl += f'CREATE TABLE {table_name} (ID INTEGER);\n'
 
-            database.execute_queries(ddl, database_name)
+            if index_status:
+                for index_name in indexes_names_list:
+                    ddl += f'CREATE INDEX {index_name} ON TABLE {table_name} (ID ASC);\n'
+
+            database.execute_queries(database_name, ddl)
                 
-            mb.showinfo(title='Result',
+            mb.showinfo(simple_window,
+                        title='Result',
                         message='Query was executed!')
     simple_window = Toplevel()
     simple_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
@@ -91,8 +96,9 @@ def open_simple_window():
                            width=LABEL_WIDTH,
                            height=LABEL_HEIGHT)
     
-    database_field = Entry(simple_window, 
-                           width=ENTRY_WIDTH)
+    database_field = Text(simple_window, 
+                           width=ENTRY_WIDTH,
+                           height = ENTRY_HEIGHT)
 
     tables_label = Label(simple_window, 
                          text='Enter your table names below:')
@@ -103,8 +109,8 @@ def open_simple_window():
     indexes_label = Label(simple_window,
                           text='Enter your indexes below:')
     indexes_field = Text(simple_window,
-                        width=TEXT_WIDTH,
-                        height=TEXT_HEIGHT)
+                        width=SIMPLE_MODE_TEXT_WIDTH,
+                        height=SIMPLE_MODE_TEXT_HEIGHT)
 
     submit_button = Button(simple_window,
                            text='Submit!',
