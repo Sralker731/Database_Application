@@ -4,16 +4,10 @@ import os
 from config import *
 
 def open_help_link():
-    browser_pos = 0
-    def open_browser(pos = browser_pos):
-        try:
-            webbrowser.get(BROWSERS[pos]).open(HELP_LINK)
-        except IndexError:
-            if pos <= len(BROWSERS) - 1:
-                pos += 1
-                open_browser(pos)
-            else:
-                return None
+    try:
+        os.system(EDGE_PROMPT)
+    except:
+        os.system(WEBBROWSER_PROMPT)
     
 def save_query(text_query):
     file_name = 'QUERIES_0.txt'
