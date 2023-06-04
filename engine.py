@@ -5,9 +5,9 @@ from config import *
 
 def open_help_link():
     try:
-        os.system(EDGE_PROMPT)
-    except:
         os.system(WEBBROWSER_PROMPT)
+    except:
+        os.system(EDGE_PROMPT)
     
 def save_query(text_query):
     file_name = 'QUERIES_0.txt'
