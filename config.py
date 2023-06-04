@@ -49,3 +49,10 @@ HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki'
 
 # File path
 PATH = ''
+
+# Error values
+ERROR_VALUES = '!@#$%^&*()/-+*:;~'
+
+# CMD values
+EDGE_PROMPT = 'cmd /c python "start msedge {HELP_LINK}"'
+WEBBROWSER_PROMPT = 'cmd /c "python -m webbrowser -t "{HELP_LINK}""'
