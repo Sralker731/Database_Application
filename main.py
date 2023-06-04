@@ -15,6 +15,7 @@ window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
 window.title(TITLE)
 
 def open_query_window():
+
     def send_query(): # This function sends query to the database
         message = mb.askyesno(title='Warning!',
                             message='Are you sure, that you want to send this query?')
@@ -35,6 +36,10 @@ def open_query_window():
                 mb.showinfo(
                             title='Result',
                             message='Query was executed!')
+            if save_var.get() == 1:
+                save_query(query)
+                mb.showinfo(title='Result',
+                            message='Query was saved in the file!')
     alt_window = Toplevel()
     alt_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
     alt_window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
@@ -55,7 +60,11 @@ def open_query_window():
     query_field = Text(alt_window,
                        width=TEXT_WIDTH,
                        height=TEXT_HEIGHT)
+    save_var = IntVar()
 
+    save_query_box = Checkbutton(alt_window, 
+                                 text='Save query',
+                                 variable = save_var)
     query_button = Button(alt_window,
                         width=BUTTON_WIDTH,
                         height=BUTTON_HEIGHT,
@@ -66,6 +75,7 @@ def open_query_window():
             file_name_field,
             query_label,
             query_field,
+            save_query_box,
             query_button]
 
     for widget in widgets:
@@ -105,6 +115,10 @@ def open_simple_window():
                     
                 mb.showinfo(title='Result',
                             message='Query was executed!')
+                if save_var.get() == 1:
+                    save_query(ddl)
+                    mb.showinfo(title='Result',
+                                message='Query was saved in the file!')
     simple_window = Toplevel()
     simple_window.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
     simple_window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
@@ -129,7 +143,13 @@ def open_simple_window():
     indexes_field = Text(simple_window,
                         width=SIMPLE_MODE_TEXT_WIDTH,
                         height=SIMPLE_MODE_TEXT_HEIGHT)
+    
+    save_var = IntVar()
 
+    save_query_box = Checkbutton(simple_window, 
+                                 text='Save query',
+                                 variable = save_var)
+    
     submit_button = Button(simple_window,
                            text='Submit!',
                            width=BUTTON_WIDTH,
@@ -139,7 +159,7 @@ def open_simple_window():
     widgets = [database_label, database_field,
                tables_label, tables_field,
                indexes_label, indexes_field,
-               submit_button]
+               save_query_box, submit_button]
     
     for widget in widgets:
         widget.pack()
@@ -189,6 +209,7 @@ def open_migration_window():
     file_name_field = Text(mig_win,
                            width=ENTRY_WIDTH,
                            height=ENTRY_HEIGHT)
+    
     start_button = Button(mig_win,
                           width=BUTTON_WIDTH,
                           height=BUTTON_HEIGHT,

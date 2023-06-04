@@ -5,13 +5,13 @@ from config import *
 
 def open_help_link():
     try:
-        os.system(EDGE_PROMPT)
-    except:
         os.system(WEBBROWSER_PROMPT)
+    except:
+        os.system(EDGE_PROMPT)
     
 def save_query(text_query):
     file_name = 'QUERIES_0.txt'
-    while os.path.exists(PATH + f'/{file_name}'):
+    while os.path.exists(PATH + f'\\{file_name}'):
         start_border = file_name.find('_') 
         end_border = file_name.find('.')
         number = int(file_name[start_border + 1:end_border]) 
