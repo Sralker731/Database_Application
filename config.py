@@ -48,7 +48,7 @@ BROWSERS = ['chrome', 'firefox', 'opera', 'safari']
 HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki' 
 
 # File path
-PATH = ''
+PATH = 'Database_Application\\'
 
 # Error values
 ERROR_VALUES = '!@#$%^&*()/-+*:;~'
