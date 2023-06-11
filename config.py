@@ -56,3 +56,4 @@ ERROR_VALUES = '!@#$%^&*()/-+*:;~'
 # CMD values
 EDGE_PROMPT = f'cmd /c python "start msedge {HELP_LINK}"'
 WEBBROWSER_PROMPT = f'cmd /c "python -m webbrowser -t "{HELP_LINK}""'
+
