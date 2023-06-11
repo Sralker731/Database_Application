@@ -12,18 +12,6 @@ project.
   ## Operating system
   * **Windows 10**
   * **Windows 10** (corporate system)
-# Terminal
-   ## Application run
-   1. Open file `main.py`.
-   2. Click the down arrow on the right of the tringle in the top right corner of the screen.
-   3. Click "Run python file".
-# Downloading of the libraries
-   If PC hasn't any of the libraries, so:
-   1. Open Start Menu.
-   2. Find Official - Windows
-   3. Click Command Line
-   4. Enter `pip install [library_name]`
-   Sreenshots are in Wiki in GitHub: https://github.com/Sralker731/Database_Application/wiki/%5BHOW-TO%5D-Install-libraries.
 # Other
 * User can get help by typing "@Kostantin_Rudenko" in the contact search field in Telegram.
 * Kostantin Rudenko support project and contribute to the project.
