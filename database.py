@@ -1,41 +1,69 @@
 from config import *
+from exceptions import *
 
+import re
+import os
 import sqlite3
+'''create_table_re = re.findall(r'CREATE TABLE \w+\((\w+ \w+(?:, )?)+\)')''' # for the future
+
 
 class Database:
-    def __init__(self, database_name):
-        self.database = database_name
+    def __init__(self, db_name):
+        self.database = db_name
+        self.connect = sqlite3.connect(self.database+'.db')
 
-    def create_database(self): # This function create and open new database
-        db_connect = sqlite3.connect(self.database + '.db')
-        return db_connect
+    def create_database(self, db_name, conn_return = False):
+        # This function create new database and return connection to it
+        try:
+            dbcon = sqlite3.connect(str(db_name)+'.db') # Database connect
+            return dbcon
+        except: # If name of db doesn't entered, the name of db = self.database
+            db_name = str(self.database) + '.db'
+            dbcon = sqlite3.connect(db_name)
+            #if conn_return == True: # FixMe
+            return dbcon
+
+    def execute_query(self, dbname = None,
+                      query = None, connection_status = False): 
+        # This function executes the queries that will be entered
+        #connect = self.create_database(dbname, connection_status)
+        cur = self.connect.cursor()
+
+        try:
+            cur.execute(query)
+            self.connect.commit() # Commit needs to save result of the query    
+        
+        except sqlite3.OperationalError:
+            raise QueryError
     
-    def create_query(self, query = None):
-        connect = self.create_database()
-        cur = connect.cursor()
-        cur.execute(query)
+    def execute_queries(self, dbname, queries): # This function execute some queries or saves them
+        #conn = self.create_database(dbname)
+        cursor = self.connect.cursor()
 
-    def select_object(self, object_name, column_list = '*'):
-        connect = self.create_database()
-        cur = connect.cursor()
-        query_result = cur.execute(f'SELECT {column_list} from {object_name}')
-        return query_result
+        #try:
+        cursor.executescript(queries)
+        self.connect.commit()
+        '''
+        except Exception as e:
+            conn.rollback()
+            raise e
+        '''
+        self.connect.close()
 
-db = Database('random_shit')
-db.create_database()
-#db.create_query("""CREATE TABLE test(i integer)""")
-#db.create_query("""INSERT INTO test(i) VAlUES (1)""")
 
-print(db.select_object('test', '*'))
+    def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
+        self.create_database(dbname)
+        self.execute_queries(dbname, queries)
 
-# TODO
-1. Залить первую НЕДОверсию в гитхаб
-2. Поэкспериментировать с запросами в базу данных
-3. Решить баг, который создает базу вне рамок репозитория
-4. Создать функции (выбрать 1 объект, много и все)
-5. Создать файл exceptions.py и прописать ошибки:
-    Query Error 
-    Database\Table\Index not found error 
-6. Составить документацию по продукту
-7. Залить отдельной веткой (db)
 
+    def select_object(self, table_name, column_list = '*',
+                      condition = '', connect_status = False): # This function select objects from table
+        try:
+            if len(condition) == 0:
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name}', connect_status)
+            else:
+                query_result = self.execute_query(f'SELECT {column_list} FROM {table_name} WHERE {condition}',
+                                                  connect_status)
+            return query_result
+        except sqlite3.OperationalError:
+            raise TableNotFoundError
