@@ -15,7 +15,6 @@ window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
 window.title(TITLE)
 
 def open_query_window():
-
     def send_query(): # This function sends query to the database
         message = mb.askyesno(title='Warning!',
                             message='Are you sure, that you want to send this query?')
