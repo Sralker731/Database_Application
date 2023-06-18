@@ -36,7 +36,7 @@ def open_query_window():
                             title='Result',
                             message='Query was executed!')
                 if 'SELECT' in query.upper():
-                    select_result = db.select_object()
+                    select_result = db.select_object(query)
                     result = save_txt_file(select_result, SELECT_FILENAME)
                     mb.showinfo(title='Save result',
                                 message = 'Result of the "SELECT" value was saved in the file!')
