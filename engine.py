@@ -30,7 +30,7 @@ def read_txt_file(file_name): # This function reads file
 
 def save_txt_file(data, file_name):
     with open(file_name + '.txt', 'w') as file:
-        file.write(file_name)
+        file.write(data)
         file.close()
 
 def find_select_stmt(query):

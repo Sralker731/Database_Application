@@ -45,10 +45,10 @@ class Database:
         self.execute_queries(dbname, queries)
 
 
-    def select_object(self, query): # This function select objects from table
+    def select_object(self, query, close_status=False): # This function select objects from table
         try:
             queries = find_select_stmt(query)
-            result = self.execute_queries(queries)
+            result = self.execute_queries(queries, close_status)
             return result
         except sqlite3.OperationalError:
             raise TableNotFoundError
