@@ -36,7 +36,7 @@ class Database:
         cursor = self.connect.cursor()
         cursor.executescript(queries)
         self.connect.commit()
-        self.connect.close()
+        #self.connect.close()
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
