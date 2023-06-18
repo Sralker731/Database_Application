@@ -31,7 +31,7 @@ def open_query_window():
                              message = 'Fields cannot be empty!')
             else:
                 db = Database(database_name)
-                db.execute_queries(database_name, query)   
+                db.execute_queries(query)   
                 mb.showinfo(
                             title='Result',
                             message='Query was executed!')

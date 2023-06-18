@@ -32,7 +32,7 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, dbname, queries): # This function execute some queries or saves them
+    def execute_queries(self, queries): # This function execute some queries or saves them
         cursor = self.connect.cursor()
         cursor.executescript(queries)
         self.connect.commit()
@@ -44,7 +44,7 @@ class Database:
         self.execute_queries(dbname, queries)
 
 
-    def select_object(self, query, connect_status = False): # This function select objects from table
+    def select_object(self, query): # This function select objects from table
         try:
             queries = find_select_stmt(query)
             result = self.execute_queries(queries)
