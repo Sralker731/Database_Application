@@ -16,7 +16,7 @@ def save_query(text_query):
         end_border = file_name.find('.')
         number = int(file_name[start_border + 1:end_border]) 
         file_name = file_name.replace(str(number), str(number + 1))
-    file = open(PATH + f'\\{file_name}', 'w')
+    file = open(file_name, 'w')
     file.write(text_query)
     file.close()
     return file_name
@@ -26,3 +26,8 @@ def read_txt_file(file_name): # This function reads file
         result = file.read()
         file.close()
     return result
+
+def save_txt_file(data, file_name):
+    with open(file_name + '.txt', 'w') as file:
+        file.write(file_name)
+        file.close()

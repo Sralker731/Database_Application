@@ -35,6 +35,9 @@ def open_query_window():
                 mb.showinfo(
                             title='Result',
                             message='Query was executed!')
+                if 'SELECT' in query:
+                    select_result = db.select_object()
+                    
             if save_var.get() == 1:
                 save_query(query)
                 mb.showinfo(title='Result',
