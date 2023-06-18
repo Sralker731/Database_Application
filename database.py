@@ -32,11 +32,12 @@ class Database:
         except sqlite3.OperationalError:
             raise QueryError
     
-    def execute_queries(self, queries): # This function execute some queries or saves them
+    def execute_queries(self, queries, close_status = False): # This function execute some queries or saves them
         cursor = self.connect.cursor()
         cursor.executescript(queries)
         self.connect.commit()
-        self.connect.close()
+        if close_status:
+            self.connect.close()
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
