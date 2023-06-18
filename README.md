@@ -12,17 +12,6 @@ project.
   ## Operating system
   * **Windows 10**
   * **Windows 10** (corporate system)
-# Terminal
-   ## Application run
-   1. Open file `main.py`.
-   2. Click the down arrow on the right of the tringle in the top right corner of the screen.
-# Downloading of the libraries
-   If PC hasn't any of the libraries, so:
-   1. Open Start Menu.
-   2. Find Official - Windows
-   3. Click Command Line
-   4. Enter `pip install [library_name]`
-   Sreenshots are in Wiki in GitHub.
 # Other
 * User can get help by typing "@Kostantin_Rudenko" in the contact search field in Telegram.
 * Kostantin Rudenko support project and contribute to the project.
