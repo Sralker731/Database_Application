@@ -15,7 +15,6 @@ window.resizable(RESIZABLE_WIDTH, RESIZABLE_HEIGHT)
 window.title(TITLE)
 
 def open_query_window():
-
     def send_query(): # This function sends query to the database
         message = mb.askyesno(title='Warning!',
                             message='Are you sure, that you want to send this query?')
@@ -36,6 +35,11 @@ def open_query_window():
                 mb.showinfo(
                             title='Result',
                             message='Query was executed!')
+                if 'SELECT' in query.upper():
+                    select_result = db.select_object()
+                    result = save_txt_file(select_result, SELECT_FILENAME)
+                    mb.showinfo(title='Save result',
+                                message = 'Result of the "SELECT" value was saved in the file!')
             if save_var.get() == 1:
                 save_query(query)
                 mb.showinfo(title='Result',
