@@ -39,7 +39,7 @@ def open_query_window():
                     select_result = db.select_object(query, True)
                     save_txt_file(select_result, SELECT_FILENAME)
                     mb.showinfo(title='Save result',
-                                message = 'Result of the "SELECT" value was saved in the file!')
+                                message = 'Result of the "SELECT" value was saved in the "save.txt" file!')
             if save_var.get() == 1:
                 save_query(query)
                 mb.showinfo(title='Result',
