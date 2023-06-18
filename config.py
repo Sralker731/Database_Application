@@ -48,8 +48,9 @@ SELECT_QUERY = r"^(\s+|)(select|Select|SELECT)(\n|\s)+([a-zA-Z0-9,]+|\*)(\n|\s)+
 BROWSERS = ['chrome', 'firefox', 'opera', 'safari']
 HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki' 
 
-# File path
+# File path & file names
 PATH = 'Database_Application\\'
+SELECT_FILENAME = 'save'
 
 # Error values
 ERROR_VALUES = '!@#$%^&*()/-+*:;~'

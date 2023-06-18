@@ -1,5 +1,6 @@
 import webbrowser
 import os
+import re
 
 from config import *
 
@@ -31,3 +32,10 @@ def save_txt_file(data, file_name):
     with open(file_name + '.txt', 'w') as file:
         file.write(file_name)
         file.close()
+
+def find_select_stmt(query):
+    select_values = re.findall(SELECT_QUERY, query)
+    select_query = ''
+    for value in select_values:
+        select_query += value + '\n'
+    return select_query
