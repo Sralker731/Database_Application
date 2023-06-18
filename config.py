@@ -42,7 +42,7 @@ TITLE = 'Database Application V.1.0.0'
 # Regular expression values
 REGEX_QUERY = r'[A-Za-z0-9\w\s|*]+;'
 TABLE_NAME_QUERY=r'Table|table|TABLE\s[a-zA-Z0-9]+'
-SELECT_QUERY = r"^(\s+|)(select|Select|SELECT)(\n|\s)+([a-zA-Z0-9,]+|\*)(\n|\s)+(from|From|FROM)(\n|\s)+[a-zA-Z0-9]+(\s|\n|)+((\n|\s)+(where|Where|WHERE)(\n|\s)+([a-zA-Z0-9',]+)(\n|\s)+(((not|Not|NOT)(\n|\s)+|)((in|In|IN)(\n|\s)+[a-zA-Z0-9,]+)|=(\n|\s|)+[a-zA-Z0-9,']+)(\s|\n|)+|)$"
+SELECT_QUERY = r"^(\s+|)(select|Select|SELECT)(\n|\s)+([a-zA-Z0-9,]+|*)(\n|\s)+(from|From|FROM)(\n|\s)+[a-zA-Z0-9]+(\s|\n|)+((\n|\s)+(where|Where|WHERE)(\n|\s)+([a-zA-Z0-9',]+)(\n|\s)+(((not|Not|NOT)(\n|\s)+|)((in|In|IN)(\n|\s)+[a-zA-Z0-9,]+)|(\s|\n|)+[=><]{1,2}(\n|\s|)+[a-zA-Z0-9,']+|(like|Like|LIKE)(\n|\s|)+[a-zA-Z0-9,'%]+)(\s|\n|)+((((and|And|AND)|)(\s|\n|)([a-zA-Z0-9',]+)(\n|\s)+(((not|Not|NOT)(\n|\s)+|)((in|In|IN)(\n|\s)+[a-zA-Z0-9,]+)|[=><]{1,2}(\n|\s|)+[a-zA-Z0-9,']+|(like|Like|LIKE)(\n|\s|)+[a-zA-Z0-9,'%]+)(\s|\n|)+)+|)|);$"
 
 # Browser values
 BROWSERS = ['chrome', 'firefox', 'opera', 'safari']
