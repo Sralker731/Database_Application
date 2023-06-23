@@ -30,16 +30,16 @@ def open_query_window():
                 mb.showerror(title = 'Error',
                              message = 'Fields cannot be empty!')
             else:
-                db = Database(database_name)
-                db.execute_queries(query)   
+                db = Database(database_name) 
                 mb.showinfo(
                             title='Result',
                             message='Query was executed!')
-                if 'SELECT' in query.upper():
+                if 'SELECT' in query or 'select' in query or 'Select' in query:
                     select_result = db.select_object(query, True)
                     save_txt_file(select_result, SELECT_FILENAME)
                     mb.showinfo(title='Save result',
                                 message = 'Result of the "SELECT" value was saved in the "save.txt" file!')
+                db.execute_queries(query)  
             if save_var.get() == 1:
                 save_query(query)
                 mb.showinfo(title='Result',
