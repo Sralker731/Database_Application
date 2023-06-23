@@ -34,8 +34,9 @@ def save_txt_file(data, file_name):
         file.close()
 
 def find_select_stmt(query):
-    select_values = re.findall(SELECT_QUERY, query)
+    select_values = query.upper()
     select_result = ''
-    for value in select_values:
-        select_result += value + '\n'
+    for value in select_values.split('\n'):
+        if 'SELECT' in value:
+            select_result += value
     return select_result
