@@ -34,21 +34,26 @@ class Database:
     
     def execute_queries(self, queries, close_status = False): # This function execute some queries or saves them
         cursor = self.connect.cursor()
-        cursor.executescript(queries)
-        self.connect.commit()
-        if close_status:
-            self.connect.close()
+        select_queries = ''
+        for select_word in SELECT_WORDS:
+            if select_word in queries:
+                for elem in queries:
+                    if 'SELECT' in elem:
+                        select_queries += elem+'\n'
+                        str(queries).replace(elem, '')
+                results = cursor.executescript(select_queries).fetchall()
+                result_string = '' # result_string - final string with result of the query
+                for result_tuple in results:
+                    for result_str in result_tuple:
+                        result_string += result_str+'\n'
+                return result_string
+        else:
+            cursor.executescript(queries)
+            self.connect.commit()
+            if close_status:
+                self.connect.close()
 
 
     def migration_function(self, dbname, queries): # This function needs to 'copy' database queries
         self.create_database(dbname)
         self.execute_queries(dbname, queries)
-
-
-    def select_object(self, query, close_status=False): # This function select objects from table
-        try:
-            queries = find_select_stmt(query)
-            result = self.execute_queries(queries, close_status)
-            return result
-        except sqlite3.OperationalError:
-            raise TableNotFoundError
