@@ -35,7 +35,7 @@ def open_query_window():
                             title='Result',
                             message='Query was executed!')
                 if 'SELECT' in query or 'select' in query or 'Select' in query:
-                    select_result = db.select_object(query, True)
+                    select_result = db.execute_queries(query)
                     save_txt_file(select_result, SELECT_FILENAME)
                     mb.showinfo(title='Save result',
                                 message = 'Result of the "SELECT" value was saved in the "save.txt" file!')
