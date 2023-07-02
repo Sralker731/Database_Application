@@ -20,7 +20,6 @@ def save_query(text_query):
     file = open(file_name, 'w')
     file.write(text_query)
     file.close()
-    return file_name
 
 def read_txt_file(file_name): # This function reads file
     with open(file_name +'.txt', 'r') as file:

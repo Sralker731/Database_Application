@@ -102,7 +102,7 @@ def open_simple_window():
                 mb.showerror(title = 'Error',
                              message = 'Fields cannot be empty!')
             else:
-                database = Database(database_name)
+                db = Database(database_name)
                 index_status = True
                 if len(indexes_names_list) == 0 or '' in indexes_names_list:
                     index_status = False
@@ -115,7 +115,7 @@ def open_simple_window():
                     for index_name in indexes_names_list:
                         ddl += f'CREATE INDEX {index_name} ON TABLE {table_name} (ID ASC);\n'
 
-                database.execute_queries(database_name, ddl)
+                db.execute_queries(ddl)
                     
                 mb.showinfo(title='Result',
                             message='Query was executed!')
