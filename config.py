@@ -42,13 +42,15 @@ TITLE = 'Database Application V.1.0.0'
 # Regular expression values
 REGEX_QUERY = r'[A-Za-z0-9\w\s|*]+;'
 TABLE_NAME_QUERY=r'Table|table|TABLE\s[a-zA-Z0-9]+'
+SELECT_QUERY = r"[SELECTselectSelect]+\w|\W+ [fromFromFROM]+ +[A-Za-z0-9]+;|[SELECTselectSelect]+\w|\W+ [fromFromFROM]+ +[A-Za-z0-9]+ +[whereWhereWHERE]+[\w\W]+;"
 
 # Browser values
 BROWSERS = ['chrome', 'firefox', 'opera', 'safari']
 HELP_LINK = 'https://github.com/Sralker731/Database_Application/wiki' 
 
-# File path
+# File path & file names
 PATH = 'Database_Application\\'
+SELECT_FILENAME = 'save'
 
 # Error values
 ERROR_VALUES = '!@#$%^&*()/-+*:;~'
@@ -56,3 +58,6 @@ ERROR_VALUES = '!@#$%^&*()/-+*:;~'
 # CMD values
 EDGE_PROMPT = f'cmd /c python "start msedge {HELP_LINK}"'
 WEBBROWSER_PROMPT = f'cmd /c "python -m webbrowser -t "{HELP_LINK}""'
+
+# Query command words
+SELECT_WORDS = ['SELECT', 'Select', 'select']
